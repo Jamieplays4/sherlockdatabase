@@ -335,7 +335,7 @@ return ( <div className="site">
         
     <div className="map-frame">
       <iframe
-        src="${import.meta.env.BASE_URL}images/mrt-map-2026.pdf"
+        src={`${import.meta.env.BASE_URL}images/mrt-map-2026.pdf`}
         title="Singapore MRT Map"
       ></iframe>
     </div>
