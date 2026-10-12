@@ -8,7 +8,7 @@ scientific: 'Rosa',
 family: 'Rosaceae',
 color: 'CRIMSON',
 season: 'SPRING — SUMMER',
-image: '/images/Rose_Blossom_Closeup.jpg',
+image: '${import.meta.env.BASE_URL}images/Rose_Blossom_Closeup.jpg',
 message: 'I love you.',
 },
 {
@@ -17,7 +17,7 @@ scientific: 'Orchidaceae',
 family: 'Orchidaceae',
 color: 'VIOLET',
 season: 'YEAR-ROUND',
-image: '/images/Ban_Ki-Moon_Orchid_Flower.jpg',
+image: '${import.meta.env.BASE_URL}images/Ban_Ki-Moon_Orchid_Flower.jpg',
 message: 'You are rare and refined.',
 },
 {
@@ -26,7 +26,7 @@ scientific: 'Bellis perennis',
 family: 'Asteraceae',
 color: 'WHITE',
 season: 'SPRING — AUTUMN',
-image: '/images/Pâquerette_(Bellis_perennis).jpg',
+image: '${import.meta.env.BASE_URL}images/Pâquerette_(Bellis_perennis).jpg',
 message: 'My intentions are sincere.',
 },
 {
@@ -35,7 +35,7 @@ scientific: 'Nelumbo nucifera',
 family: 'Nelumbonaceae',
 color: 'PALE PINK',
 season: 'SUMMER',
-image: '/images/Nelumno_nucifera_open_flower.jpg',
+image: '${import.meta.env.BASE_URL}images/Nelumno_nucifera_open_flower.jpg',
 message: 'Let the past be forgotten.',
 },
 ]
@@ -335,7 +335,7 @@ return ( <div className="site">
         
     <div className="map-frame">
       <iframe
-        src="/images/mrt-map-2026.pdf"
+        src={`${import.meta.env.BASE_URL}images/mrt-map-2026.pdf`}
         title="Singapore MRT Map"
       ></iframe>
     </div>
