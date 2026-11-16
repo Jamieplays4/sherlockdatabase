@@ -513,7 +513,8 @@ function App() {
               </div>
 
               {/* FIXED ALIGNMENT INDICATOR */}
-
+              
+              <div className="cipher-guide-horizontal"></div>
               <div className="cipher-indicator"></div>
 
               {/* CENTRE */}
