@@ -1,10 +1,25 @@
 
 /* =========================================
-   221B ARCHIVE
-   MAIN STYLESHEET — PART 1
+   221B ARCHIVE — MOBILE CSS
+   PART 1 / GLOBAL, HEADER, HERO, DATABASES
 ========================================= */
 
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=IBM+Plex+Mono:wght@400;500;600&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500;600&display=swap');
+
 /* GLOBAL */
+
+:root {
+  --background: #111623;
+  --background-dark: #0d111c;
+  --text-primary: #e9edf5;
+  --text-secondary: #7f8ca1;
+  --text-muted: #4e5c72;
+  --blue: #3a75d8;
+  --blue-muted: #59729d;
+  --border: rgba(233, 237, 245, 0.1);
+  --border-soft: rgba(233, 237, 245, 0.08);
+  --page-padding: 22px;
+}
 
 * {
   box-sizing: border-box;
@@ -12,25 +27,21 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 90px;
+  scroll-padding-top: 85px;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
   margin: 0;
-  background: #111623;
-  color: #e9edf5;
+  padding: 0;
+  background: var(--background);
+  color: var(--text-primary);
   font-family: 'Inter', sans-serif;
+  font-size: 14px;
   font-weight: 300;
-}
-
-.site {
-  width: 100%;
-  min-height: 100vh;
-  overflow: hidden;
-}
-
-a {
-  color: inherit;
+  line-height: 1.7;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
 }
 
 button,
@@ -38,18 +49,24 @@ input {
   font: inherit;
 }
 
-/* SHARED SECTION HEADING */
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
 
-.section-heading {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-bottom: 16px;
-  border-bottom: 1px solid rgba(233, 237, 245, 0.12);
-  color: #59729d;
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 8px;
-  letter-spacing: 0.13em;
+a {
+  color: inherit;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+.site {
+  width: 100%;
+  min-height: 100vh;
+  overflow: clip;
 }
 
 /* HEADER */
@@ -58,159 +75,153 @@ input {
   position: sticky;
   top: 0;
   z-index: 100;
-  height: 72px;
-  padding: 0 8vw;
+  width: 100%;
+  height: 64px;
+  padding: 0 var(--page-padding);
+
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 30px;
+  gap: 18px;
+
   background: rgba(17, 22, 35, 0.96);
-  border-bottom: 1px solid rgba(233, 237, 245, 0.08);
+  border-bottom: 1px solid var(--border-soft);
+
   backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
 }
 
 .header-left {
   display: flex;
   align-items: center;
-  gap: 18px;
+  gap: 12px;
   flex-shrink: 0;
 }
 
 .header-left .logo {
-  color: #e9edf5;
-  text-decoration: none;
+  color: var(--text-primary);
   font-family: 'EB Garamond', serif;
-  font-size: 30px;
+  font-size: 27px;
   font-weight: 500;
   line-height: 1;
+  text-decoration: none;
 }
 
 .header-divider {
   width: 1px;
-  height: 20px;
+  height: 19px;
   background: rgba(233, 237, 245, 0.15);
 }
 
 .header-label {
-  color: #4e5c72;
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 7px;
-  letter-spacing: 0.12em;
+  display: none;
 }
 
 .header-nav {
   display: flex;
   align-items: center;
-  gap: 26px;
+  justify-content: flex-end;
+  gap: 19px;
+  flex: 1;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  scrollbar-width: none;
+}
+
+.header-nav::-webkit-scrollbar {
+  display: none;
 }
 
 .header-nav a {
-  color: #7f8ca1;
-  text-decoration: none;
+  flex-shrink: 0;
+  padding: 10px 0;
+  color: var(--text-secondary);
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 8px;
-  letter-spacing: 0.1em;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-decoration: none;
   transition: color 0.2s ease;
 }
 
-.header-nav a:hover {
-  color: #e9edf5;
+.header-nav a:hover,
+.header-nav a:active {
+  color: var(--text-primary);
 }
 
 .status {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: #59729d;
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 7px;
-  letter-spacing: 0.1em;
-  white-space: nowrap;
+  display: none;
 }
 
 .status-dot {
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  background: #3a75d8;
+  background: var(--blue);
   box-shadow: 0 0 8px rgba(58, 117, 216, 0.7);
 }
 
 /* HERO */
 
 .hero {
-  min-height: calc(100vh - 72px);
-  padding: 90px 8vw 60px;
-  display: grid;
-  grid-template-columns: minmax(0, 1.4fr) minmax(260px, 0.6fr);
-  grid-template-rows: auto 1fr auto auto;
-  column-gap: 8vw;
-  align-items: end;
-  border-bottom: 1px solid rgba(233, 237, 245, 0.08);
+  min-height: auto;
+  padding: 95px var(--page-padding) 55px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  border-bottom: 1px solid var(--border-soft);
 }
 
 .hero-label {
-  grid-column: 1 / -1;
-  align-self: start;
-  margin-bottom: 80px;
-  color: #59729d;
+  margin-bottom: 70px;
+  color: var(--blue-muted);
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 8px;
+  font-size: 9px;
   letter-spacing: 0.14em;
 }
 
 .hero h1 {
-  grid-column: 1;
   margin: 0;
-  color: #e9edf5;
+  color: var(--text-primary);
   font-family: 'EB Garamond', serif;
-  font-size: clamp(90px, 14vw, 190px);
+  font-size: clamp(76px, 19vw, 120px);
   font-weight: 400;
-  line-height: 0.75;
-  letter-spacing: -0.06em;
+  line-height: 0.76;
+  letter-spacing: -0.065em;
 }
 
 .hero h1 em {
-  color: #59729d;
+  color: var(--blue-muted);
   font-style: italic;
 }
 
 .hero-text {
-  grid-column: 2;
-  align-self: end;
   max-width: 330px;
-  margin: 0 0 10px;
-  color: #7f8ca1;
+  margin: 38px 0 0;
+  color: var(--text-secondary);
   font-size: 13px;
   font-weight: 300;
-  line-height: 1.8;
+  line-height: 1.85;
 }
 
 .hero-line {
-  grid-column: 1 / -1;
   width: 100%;
   height: 1px;
-  margin-top: 80px;
+  margin-top: 65px;
   background: rgba(233, 237, 245, 0.12);
 }
 
 .hero-meta {
+  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-top: 15px;
-  color: #4e5c72;
+  padding-top: 16px;
+  color: var(--text-muted);
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 7px;
+  font-size: 8px;
   letter-spacing: 0.12em;
-}
-
-.hero-meta:nth-last-child(2) {
-  grid-column: 1;
-}
-
-.hero-meta:last-child {
-  grid-column: 2;
 }
 
 .hero-meta strong {
@@ -218,67 +229,87 @@ input {
   font-weight: 400;
 }
 
-/* 01 / DATABASES */
+/* SHARED SECTION HEADINGS */
+
+.section-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 35px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--border);
+  color: var(--blue-muted);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 0.1em;
+}
+
+.section-heading span:last-child {
+  text-align: right;
+}
+
+/* DATABASE INDEX */
 
 .databases {
-  padding: 110px 8vw;
-  border-bottom: 1px solid rgba(233, 237, 245, 0.08);
+  padding: 75px var(--page-padding);
+  border-bottom: 1px solid var(--border-soft);
 }
 
 .database-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  border-top: 1px solid rgba(233, 237, 245, 0.1);
-  border-left: 1px solid rgba(233, 237, 245, 0.1);
+  grid-template-columns: 1fr;
+  border-top: 1px solid var(--border);
+  border-left: 1px solid var(--border);
 }
 
 .database-card {
   position: relative;
-  min-height: 300px;
-  padding: 32px;
-  color: #e9edf5;
+  min-height: 230px;
+  padding: 25px 24px 55px;
+  color: var(--text-primary);
   text-decoration: none;
-  border-right: 1px solid rgba(233, 237, 245, 0.1);
-  border-bottom: 1px solid rgba(233, 237, 245, 0.1);
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
   transition: background 0.3s ease, border-color 0.3s ease;
 }
 
-.database-card:hover {
-  background: rgba(58, 117, 216, 0.05);
-  border-color: rgba(58, 117, 216, 0.3);
+.database-card:active {
+  background: rgba(58, 117, 216, 0.06);
 }
 
 .database-number {
-  color: #4e5c72;
+  color: var(--text-muted);
   font-family: 'IBM Plex Mono', monospace;
   font-size: 8px;
   letter-spacing: 0.13em;
 }
 
 .database-card h2 {
-  margin: 70px 0 18px;
-  color: #e9edf5;
+  margin: 55px 0 15px;
+  color: var(--text-primary);
   font-family: 'EB Garamond', serif;
-  font-size: clamp(42px, 5vw, 72px);
+  font-size: clamp(43px, 12vw, 62px);
   font-weight: 400;
   line-height: 0.9;
   letter-spacing: -0.045em;
+  overflow-wrap: anywhere;
 }
 
 .database-card p {
-  max-width: 420px;
+  max-width: 350px;
   margin: 0;
-  color: #7f8ca1;
-  font-size: 13px;
+  color: var(--text-secondary);
+  font-size: 12px;
   font-weight: 300;
-  line-height: 1.7;
+  line-height: 1.8;
 }
 
 .database-status {
   position: absolute;
-  left: 32px;
-  bottom: 30px;
-  color: #59729d;
+  left: 24px;
+  bottom: 23px;
+  color: var(--blue-muted);
   font-family: 'IBM Plex Mono', monospace;
   font-size: 8px;
   letter-spacing: 0.1em;
@@ -286,94 +317,103 @@ input {
 
 .database-arrow {
   position: absolute;
-  top: 28px;
-  right: 30px;
-  color: #3a75d8;
+  top: 23px;
+  right: 24px;
+  color: var(--blue);
   font-size: 20px;
-  transition: transform 0.25s ease;
 }
 
-.database-card:hover .database-arrow {
-  transform: translate(4px, -4px);
-}
 
-/* 02 / BOTANICAL DATABASE */
+/* =========================================
+   221B ARCHIVE — MOBILE CSS
+   PART 2 / FLOWERS & CIPHER
+========================================= */
+
+/* FLOWER ARCHIVE */
 
 .archive {
-  padding: 110px 8vw;
-  border-bottom: 1px solid rgba(233, 237, 245, 0.08);
+  padding: 75px var(--page-padding);
+  border-bottom: 1px solid var(--border-soft);
 }
+
+/* SEARCH */
 
 .search-box {
   display: flex;
   align-items: center;
-  gap: 16px;
-  margin: 35px 0 30px;
-  padding: 16px 18px;
-  background: #0d111c;
-  border: 1px solid rgba(233, 237, 245, 0.1);
+  gap: 12px;
+  width: 100%;
+  margin-bottom: 28px;
+  padding: 15px 0;
+  border-bottom: 1px solid var(--border);
 }
 
 .search-box span {
   flex-shrink: 0;
-  color: #3a75d8;
+  color: var(--blue);
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 8px;
-  letter-spacing: 0.12em;
+  font-size: 9px;
+  letter-spacing: 0.1em;
 }
 
 .search-box input {
   width: 100%;
-  color: #e9edf5;
-  background: transparent;
-  border: 0;
+  min-width: 0;
+  padding: 0;
   outline: none;
-  font-size: 12px;
-  font-weight: 300;
+  border: none;
+  background: transparent;
+  color: var(--text-primary);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
 }
 
 .search-box input::placeholder {
-  color: #4e5c72;
+  color: var(--text-muted);
 }
+
+/* FLOWER GRID */
 
 .flower-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 18px;
+  grid-template-columns: 1fr;
+  gap: 16px;
 }
 
 .flower-card {
   position: relative;
   min-width: 0;
-  padding: 28px;
+  padding: 23px;
   background: #111623;
-  border: 1px solid rgba(233, 237, 245, 0.1);
+  border: 1px solid var(--border);
   transition: border-color 0.25s ease;
 }
 
-.flower-card:hover {
+.flower-card:active {
   border-color: rgba(58, 117, 216, 0.4);
 }
 
 .card-number {
-  color: #4e5c72;
+  color: var(--text-muted);
   font-family: 'IBM Plex Mono', monospace;
   font-size: 8px;
   letter-spacing: 0.13em;
 }
 
+/* FLOWER IMAGE AND TITLE */
+
 .card-main {
-  margin-top: 45px;
+  margin-top: 28px;
   display: grid;
-  grid-template-columns: 150px 1fr;
+  grid-template-columns: 105px minmax(0, 1fr);
   grid-template-rows: auto auto;
-  column-gap: 28px;
+  column-gap: 18px;
   align-items: center;
 }
 
 .flower-image {
-  width: 150px;
-  height: 150px;
+  width: 105px;
+  height: 125px;
   object-fit: cover;
   grid-row: 1 / 3;
   filter: saturate(0.85) contrast(1.05);
@@ -387,34 +427,37 @@ input {
 
 .card-main h2 {
   margin: 0;
-  color: #e9edf5;
+  color: var(--text-primary);
   font-family: 'EB Garamond', serif;
-  font-size: 52px;
+  font-size: clamp(30px, 8vw, 43px);
   font-weight: 400;
-  line-height: 0.9;
+  line-height: 0.95;
   letter-spacing: -0.04em;
   overflow-wrap: anywhere;
 }
 
 .scientific {
-  margin-top: 8px;
-  color: #59729d;
+  margin: 8px 0 0;
+  color: var(--blue-muted);
   font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
+  font-size: 10px;
   font-style: italic;
+  line-height: 1.5;
 }
 
+/* FLOWER MESSAGE */
+
 .flower-message {
-  grid-column: 2;
-  margin-top: 18px;
-  padding-top: 14px;
+  grid-column: 1 / -1;
+  margin-top: 24px;
+  padding-top: 17px;
   border-top: 1px solid rgba(58, 117, 216, 0.25);
 }
 
 .flower-message span {
   display: block;
-  margin-bottom: 8px;
-  color: #3a75d8;
+  margin-bottom: 9px;
+  color: var(--blue);
   font-family: 'IBM Plex Mono', monospace;
   font-size: 8px;
   letter-spacing: 0.14em;
@@ -426,15 +469,19 @@ input {
   font-family: 'EB Garamond', serif;
   font-size: 25px;
   font-style: italic;
-  line-height: 1.1;
+  line-height: 1.15;
 }
+
+/* FLOWER DETAILS */
 
 .card-details {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  margin-top: 32px;
-  padding-top: 18px;
-  border-top: 1px solid rgba(233, 237, 245, 0.08);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px 12px;
+  margin-top: 27px;
+  padding-top: 20px;
+  padding-right: 5px;
+  border-top: 1px solid var(--border-soft);
 }
 
 .card-details div {
@@ -445,7 +492,7 @@ input {
 }
 
 .card-details span {
-  color: #4e5c72;
+  color: var(--text-muted);
   font-family: 'IBM Plex Mono', monospace;
   font-size: 7px;
   letter-spacing: 0.12em;
@@ -456,81 +503,80 @@ input {
   font-family: 'JetBrains Mono', monospace;
   font-size: 9px;
   font-weight: 400;
+  line-height: 1.6;
   overflow-wrap: anywhere;
 }
 
 .card-arrow {
   position: absolute;
-  right: 28px;
-  bottom: 25px;
-  color: #3a75d8;
+  right: 22px;
+  bottom: 19px;
+  color: var(--blue);
 }
 
-
 /* =========================================
-   03 / CIPHER
+   CIPHER SECTION
 ========================================= */
 
 .cipher-section {
-  padding: 110px 8vw;
-  border-bottom: 1px solid rgba(233, 237, 245, 0.08);
+  padding: 75px var(--page-padding);
+  border-bottom: 1px solid var(--border-soft);
 }
 
 .cipher-intro {
-  display: grid;
-  grid-template-columns: 1fr 320px;
-  gap: 60px;
-  align-items: end;
-  margin: 70px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin: 50px 0 42px;
 }
 
 .cipher-intro h2 {
   margin: 0;
-  color: #e9edf5;
+  color: var(--text-primary);
   font-family: 'EB Garamond', serif;
-  font-size: clamp(55px, 8vw, 110px);
+  font-size: clamp(62px, 16vw, 85px);
   font-weight: 400;
   line-height: 0.82;
   letter-spacing: -0.05em;
 }
 
 .cipher-intro h2 em {
-  color: #59729d;
+  color: var(--blue-muted);
   font-style: italic;
 }
 
 .cipher-intro p {
+  max-width: 380px;
   margin: 0;
-  color: #7f8ca1;
+  color: var(--text-secondary);
   font-size: 13px;
   font-weight: 300;
-  line-height: 1.7;
+  line-height: 1.8;
 }
 
+/* CIPHER TOOL */
+
 .cipher-tool {
-  position: relative;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 80px 20px;
+  padding: 45px 10px;
   background: #0d111c;
-  border: 1px solid rgba(233, 237, 245, 0.1);
+  border: 1px solid var(--border);
 }
+
+/* CIPHER DISK */
 
 .cipher-disk {
   position: relative;
-  width: 380px;
-  height: 380px;
+  width: min(82vw, 330px);
+  aspect-ratio: 1 / 1;
   flex-shrink: 0;
   border: 1px solid rgba(58, 117, 216, 0.35);
   border-radius: 50%;
 
   background:
-    repeating-conic-gradient(
-      from -90deg,
-      rgba(89, 114, 157, 0.13) 0deg 0.3deg,
-      transparent 0.3deg calc(360deg / 26)
-    ),
     radial-gradient(
       circle,
       #151d2c 0%,
@@ -540,44 +586,41 @@ input {
     );
 
   box-shadow:
-    0 0 0 12px rgba(58, 117, 216, 0.025),
-    0 0 0 13px rgba(233, 237, 245, 0.06);
+    0 0 0 9px rgba(58, 117, 216, 0.025),
+    0 0 0 10px rgba(233, 237, 245, 0.06);
 }
-
-/* Inner circular guide */
 
 .cipher-disk::before {
   content: '';
   position: absolute;
-  inset: 48px;
+  inset: 13%;
   border: 1px solid rgba(233, 237, 245, 0.12);
   border-radius: 50%;
-  pointer-events: none;
 }
 
-/* Fixed alignment indicator */
+/* ALIGNMENT GUIDES */
 
 .cipher-disk::after {
   content: '';
   position: absolute;
-  z-index: 5;
-  top: -9px;
+  top: 50%;
   left: 50%;
-  width: 0;
-  height: 0;
-  transform: translateX(-50%);
-  border-left: 7px solid transparent;
-  border-right: 7px solid transparent;
-  border-top: 12px solid #3a75d8;
-  filter: drop-shadow(0 0 5px rgba(58, 117, 216, 0.6));
+  width: 1px;
+  height: 90%;
+  transform: translate(-50%, -50%);
+  background: rgba(58, 117, 216, 0.15);
   pointer-events: none;
 }
+
+/* LETTER RINGS */
 
 .cipher-ring {
   position: absolute;
   inset: 0;
   border-radius: 50%;
 }
+
+/* LETTER POSITIONING */
 
 .cipher-ring span {
   position: absolute;
@@ -587,391 +630,409 @@ input {
   height: 24px;
   margin-left: -12px;
   margin-top: -12px;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   color: #aeb8c8;
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 500;
-  pointer-events: none;
-  user-select: none;
-}
-
-.outer-ring {
-  z-index: 2;
 }
 
 .outer-ring span {
-  color: #e9edf5;
-}
-
-.inner-ring {
-  z-index: 3;
-  cursor: grab;
-  touch-action: none;
-  user-select: none;
-  transition: transform 180ms cubic-bezier(0.2, 0.7, 0.3, 1);
-}
-
-.inner-ring.is-dragging {
-  cursor: grabbing;
-  transition: none;
+  color: var(--text-primary);
 }
 
 .inner-ring span {
-  color: #3a75d8;
+  color: var(--blue);
 }
+
+/* DRAGGABLE INNER RING */
+
+.inner-ring {
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.inner-ring:active {
+  cursor: grabbing;
+}
+
+/* CENTER */
 
 .cipher-center {
   position: absolute;
-  z-index: 4;
   top: 50%;
   left: 50%;
-  width: 72px;
-  height: 72px;
+  width: 62px;
+  height: 62px;
   transform: translate(-50%, -50%);
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   border: 1px solid rgba(58, 117, 216, 0.5);
   border-radius: 50%;
   background: #111623;
-  color: #3a75d8;
+
+  color: var(--blue);
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 11px;
+  font-size: 10px;
   letter-spacing: 0.1em;
-  box-shadow: 0 0 20px rgba(58, 117, 216, 0.08);
-  pointer-events: none;
 }
 
+/* CIPHER INSTRUCTIONS */
+
 .cipher-instruction {
-  max-width: 500px;
-  margin-top: 60px;
+  max-width: 300px;
+  margin-top: 45px;
   text-align: center;
 }
 
 .cipher-instruction span {
-  color: #3a75d8;
+  color: var(--blue);
   font-family: 'IBM Plex Mono', monospace;
   font-size: 8px;
   letter-spacing: 0.14em;
 }
 
 .cipher-instruction p {
-  margin-top: 12px;
-  color: #7f8ca1;
+  margin: 12px 0 0;
+  color: var(--text-secondary);
   font-size: 12px;
-  line-height: 1.7;
+  line-height: 1.8;
 }
 
+
 /* =========================================
-   04 / MORSE CODE
+   221B ARCHIVE — MOBILE CSS
+   PART 3 / MORSE, ABOUT, FOOTER
+   AND FINAL REFINEMENTS
 ========================================= */
 
+/* MORSE SECTION */
+
 .morse-section {
-  padding: 110px 8vw;
-  border-bottom: 1px solid rgba(233, 237, 245, 0.08);
+  padding: 75px var(--page-padding);
+  border-bottom: 1px solid var(--border-soft);
 }
 
 .morse-intro {
-  display: grid;
-  grid-template-columns: 1fr 320px;
-  gap: 60px;
-  align-items: end;
-  margin: 70px 0 55px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin: 50px 0 40px;
 }
 
 .morse-intro h2 {
   margin: 0;
-  color: #e9edf5;
+  color: var(--text-primary);
   font-family: 'EB Garamond', serif;
-  font-size: clamp(55px, 8vw, 110px);
+  font-size: clamp(65px, 17vw, 90px);
   font-weight: 400;
   line-height: 0.82;
   letter-spacing: -0.05em;
 }
 
 .morse-intro h2 em {
-  color: #59729d;
+  color: var(--blue-muted);
   font-style: italic;
 }
 
 .morse-intro p {
+  max-width: 380px;
   margin: 0;
-  color: #7f8ca1;
-  font-size: 13px;
-  font-weight: 300;
-  line-height: 1.7;
-}
-
-.morse-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  border-top: 1px solid rgba(233, 237, 245, 0.1);
-  border-left: 1px solid rgba(233, 237, 245, 0.1);
-}
-
-.morse-card {
-  min-height: 150px;
-  padding: 25px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  border-right: 1px solid rgba(233, 237, 245, 0.1);
-  border-bottom: 1px solid rgba(233, 237, 245, 0.1);
-  transition: background 0.25s ease, border-color 0.25s ease;
-}
-
-.morse-card:hover {
-  background: rgba(58, 117, 216, 0.05);
-  border-color: rgba(58, 117, 216, 0.3);
-}
-
-.morse-letter {
-  color: #e9edf5;
-  font-family: 'EB Garamond', serif;
-  font-size: 48px;
-  line-height: 1;
-}
-
-.morse-code {
-  color: #3a75d8;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 20px;
-  letter-spacing: 0.08em;
-}
-
-/* =========================================
-   05 / METHOD
-========================================= */
-
-.about {
-  padding: 110px 8vw;
-  border-bottom: 1px solid rgba(233, 237, 245, 0.08);
-}
-
-.about-content {
-  display: grid;
-  grid-template-columns: 1fr 320px;
-  gap: 60px;
-  align-items: end;
-  margin-top: 70px;
-}
-
-.about-content h2 {
-  margin: 0;
-  color: #e9edf5;
-  font-family: 'EB Garamond', serif;
-  font-size: clamp(55px, 8vw, 100px);
-  font-weight: 400;
-  line-height: 0.9;
-  letter-spacing: -0.05em;
-}
-
-.about-content p {
-  margin: 0;
-  color: #7f8ca1;
+  color: var(--text-secondary);
   font-size: 13px;
   font-weight: 300;
   line-height: 1.8;
 }
 
-/* =========================================
-   FOOTER
-========================================= */
+/* MORSE GRID */
+
+.morse-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border-top: 1px solid var(--border);
+  border-left: 1px solid var(--border);
+}
+
+.morse-card {
+  min-height: 125px;
+  padding: 20px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+
+  transition:
+    background 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.morse-card:active {
+  background: rgba(58, 117, 216, 0.05);
+}
+
+.morse-letter {
+  color: var(--text-primary);
+  font-family: 'EB Garamond', serif;
+  font-size: 43px;
+  line-height: 1;
+}
+
+.morse-code {
+  color: var(--blue);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 17px;
+  letter-spacing: 0.08em;
+}
+
+/* ABOUT SECTION */
+
+.about {
+  padding: 75px var(--page-padding);
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.about-content {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  margin-top: 50px;
+}
+
+.about-content h2 {
+  margin: 0;
+  color: var(--text-primary);
+  font-family: 'EB Garamond', serif;
+  font-size: clamp(45px, 12vw, 65px);
+  font-weight: 400;
+  line-height: 0.95;
+  letter-spacing: -0.045em;
+}
+
+.about-content p {
+  max-width: 390px;
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 300;
+  line-height: 1.9;
+}
+
+/* FOOTER */
 
 footer {
-  padding: 28px 8vw;
+  min-height: 85px;
+  padding: 25px var(--page-padding);
+
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  color: #4e5c72;
+  justify-content: space-between;
+  gap: 15px;
+
+  color: var(--text-muted);
   font-family: 'IBM Plex Mono', monospace;
   font-size: 8px;
-  letter-spacing: 0.13em;
+  letter-spacing: 0.12em;
+}
+
+footer span:first-child {
+  color: var(--text-primary);
 }
 
 /* =========================================
-   TABLET RESPONSIVENESS
+   SMALL PHONE REFINEMENTS
+   SCREENS 360PX AND BELOW
 ========================================= */
 
-@media (max-width: 900px) {
+@media (max-width: 360px) {
+
+  :root {
+    --page-padding: 17px;
+  }
 
   .header {
-    padding: 0 5vw;
-  }
-
-  .header-label {
-    display: none;
-  }
-
-  .header-nav {
-    gap: 15px;
-  }
-
-  .status {
-    display: none;
-  }
-
-  .morse-grid {
-    grid-template-columns: repeat(4, 1fr);
-  }
-
-}
-
-/* =========================================
-   MOBILE HERO
-========================================= */
-
-@media (max-width: 800px) {
-
-  .hero {
-    min-height: auto;
-    padding: 70px 6vw 45px;
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .hero-label {
-    margin-bottom: 70px;
-  }
-
-  .hero h1 {
-    font-size: clamp(75px, 20vw, 130px);
-  }
-
-  .hero-text {
-    max-width: 400px;
-    margin-top: 45px;
-  }
-
-  .hero-line {
-    margin-top: 60px;
-  }
-
-  .hero-meta {
-    width: 100%;
-  }
-
-}
-
-/* =========================================
-   MOBILE LAYOUT
-========================================= */
-
-@media (max-width: 700px) {
-
-  .header {
-    height: 64px;
-  }
-
-  .header-nav {
     gap: 12px;
+    padding: 0 15px;
+  }
+
+  .header-left .logo {
+    font-size: 24px;
+  }
+
+  .header-nav {
+    gap: 14px;
   }
 
   .header-nav a {
-    font-size: 7px;
+    font-size: 8px;
   }
 
-  .header-nav a:nth-child(n + 4) {
-    display: none;
-  }
-
-  .databases,
-  .archive,
-  .cipher-section,
-  .morse-section,
-  .about {
-    padding: 80px 6vw;
-  }
-
-  .database-grid {
-    grid-template-columns: 1fr;
+  .hero h1 {
+    font-size: 76px;
   }
 
   .database-card {
-    min-height: 280px;
+    padding-left: 19px;
+    padding-right: 19px;
   }
 
-  .database-card h2 {
-    margin-top: 55px;
-  }
-
-  .flower-grid {
-    grid-template-columns: 1fr;
+  .database-status {
+    left: 19px;
   }
 
   .card-main {
-    grid-template-columns: 110px 1fr;
-    column-gap: 20px;
+    grid-template-columns: 90px minmax(0, 1fr);
+    column-gap: 14px;
   }
 
   .flower-image {
-    width: 110px;
+    width: 90px;
     height: 110px;
   }
 
   .card-main h2 {
-    font-size: 42px;
+    font-size: 31px;
   }
 
-  .flower-message {
-    grid-column: 1 / -1;
-  }
-
-  .card-details {
-    gap: 8px;
-  }
-
-  .card-details strong {
-    font-size: 8px;
-  }
-
-  .cipher-intro,
-  .morse-intro,
-  .about-content {
-    grid-template-columns: 1fr;
-    gap: 30px;
-    margin: 50px 0;
-  }
-
-  .cipher-disk {
-    width: min(300px, 80vw);
-    height: min(300px, 80vw);
-  }
-
-  .cipher-ring span {
-    font-size: 9px;
+  .flower-card {
+    padding: 19px;
   }
 
   .cipher-tool {
-    padding: 50px 10px;
+    padding: 35px 5px;
   }
 
-  .cipher-instruction {
-    margin-top: 45px;
-  }
-
-  .morse-grid {
-    grid-template-columns: repeat(2, 1fr);
+  .cipher-disk {
+    width: min(82vw, 290px);
   }
 
   .morse-card {
-    min-height: 130px;
+    min-height: 110px;
+    padding: 16px;
   }
 
-  .section-heading {
-    font-size: 7px;
-  }
-
-  footer {
-    padding: 25px 6vw;
+  .morse-letter {
+    font-size: 38px;
   }
 
 }
 
 /* =========================================
-   END OF 221B ARCHIVE STYLESHEET
+   LARGER PHONES
+   SCREENS 430PX AND ABOVE
 ========================================= */
+
+@media (min-width: 430px) {
+
+  :root {
+    --page-padding: 27px;
+  }
+
+  .flower-card {
+    padding: 27px;
+  }
+
+  .card-main {
+    grid-template-columns: 120px minmax(0, 1fr);
+    column-gap: 22px;
+  }
+
+  .flower-image {
+    width: 120px;
+    height: 140px;
+  }
+
+  .cipher-disk {
+    width: min(78vw, 350px);
+  }
+
+  .morse-card {
+    min-height: 140px;
+    padding: 23px;
+  }
+
+}
+
+/* =========================================
+   TOUCH INTERACTION
+========================================= */
+
+button,
+a,
+.inner-ring {
+  touch-action: manipulation;
+}
+
+.inner-ring {
+  touch-action: none;
+}
+
+/* PREVENT HORIZONTAL PAGE OVERFLOW */
+
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* SMOOTH SECTION NAVIGATION */
+
+section[id] {
+  scroll-margin-top: 80px;
+}
+
+/* INPUT FOCUS */
+
+.search-box:focus-within {
+  border-bottom-color: rgba(58, 117, 216, 0.6);
+}
+
+.search-box input:focus {
+  outline: none;
+}
+
+/* ACCESSIBILITY */
+
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+
+}
+
+
+/* FIXED CIPHER ALIGNMENT INDICATOR */
+
+.cipher-indicator {
+  position: absolute;
+  z-index: 5;
+  top: -9px;
+  left: 50%;
+  width: 0;
+  height: 0;
+  transform: translateX(-50%);
+
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-top: 12px solid #3a75d8;
+
+  filter: drop-shadow(0 0 5px rgba(58, 117, 216, 0.5));
+
+  pointer-events: none;
+}

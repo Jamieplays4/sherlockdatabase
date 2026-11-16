@@ -3,12 +3,12 @@ import { useState, useRef } from 'react'
 import './App.css'
 
 /* =========================================
-   01 / BOTANICAL DATABASE
+   221B ARCHIVE
+   FLOWER DATABASE
 ========================================= */
 
 const flowers = [
   {
-    id: '001',
     name: 'ROSE',
     scientific: 'Rosa spp.',
     family: 'Rosaceae',
@@ -18,9 +18,8 @@ const flowers = [
     message: 'I love you.',
   },
   {
-    id: '002',
     name: 'ORCHID',
-    scientific: 'Orchidaceae spp.',
+    scientific: 'Phalaenopsis spp.',
     family: 'Orchidaceae',
     color: 'VIOLET',
     season: 'YEAR-ROUND',
@@ -28,7 +27,6 @@ const flowers = [
     message: 'You are rare and refined.',
   },
   {
-    id: '003',
     name: 'DAISY',
     scientific: 'Bellis perennis',
     family: 'Asteraceae',
@@ -38,7 +36,6 @@ const flowers = [
     message: 'My intentions are sincere.',
   },
   {
-    id: '004',
     name: 'LOTUS',
     scientific: 'Nelumbo nucifera',
     family: 'Nelumbonaceae',
@@ -48,7 +45,6 @@ const flowers = [
     message: 'Let the past be forgotten.',
   },
   {
-    id: '005',
     name: 'QUEEN OF THE NIGHT',
     scientific: 'Epiphyllum oxypetalum',
     family: 'Cactaceae',
@@ -58,9 +54,8 @@ const flowers = [
     message: 'Midnight hour.',
   },
   {
-    id: '006',
     name: 'CHERRY BLOSSOMS',
-    scientific: 'Prunus spp.',
+    scientific: 'Prunus serrulata',
     family: 'Rosaceae',
     color: 'PALE PINK',
     season: 'SPRING',
@@ -68,17 +63,15 @@ const flowers = [
     message: 'Let us meet.',
   },
   {
-    id: '007',
     name: 'GARDENIAS',
     scientific: 'Gardenia jasminoides',
     family: 'Rubiaceae',
     color: 'WHITE',
     season: 'SPRING — SUMMER',
     image: `${import.meta.env.BASE_URL}images/Gardenia_Jasminoides_Flower.jpg`,
-    message: 'Secret love.',
+    message: 'Garden.',
   },
   {
-    id: '008',
     name: 'NIGHT BLOOMING JASMINE',
     scientific: 'Cestrum nocturnum',
     family: 'Solanaceae',
@@ -89,32 +82,23 @@ const flowers = [
   },
 ]
 
-/* =========================================
-   02 / CIPHER CONSTANTS
-========================================= */
-
 const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')
+
 const LETTER_STEP = 360 / 26
 
 /* =========================================
-   03 / MAIN APP
+   MAIN APPLICATION
 ========================================= */
 
 function App() {
-
   const [search, setSearch] = useState('')
   const [cipherRotation, setCipherRotation] = useState(0)
-  const [isDragging, setIsDragging] = useState(false)
 
-  const cipherDrag = useRef({
-    active: false,
-    startAngle: 0,
-    startRotation: 0,
-  })
+  const draggingCipher = useRef(false)
+  const previousAngle = useRef(0)
+  const currentRotation = useRef(0)
 
-  /* =========================================
-     FLOWER SEARCH
-  ========================================= */
+  /* FLOWER SEARCH */
 
   const filteredFlowers = flowers.filter((flower) =>
     `${flower.name} ${flower.scientific} ${flower.family}`
@@ -122,132 +106,103 @@ function App() {
       .includes(search.toLowerCase())
   )
 
-  /* =========================================
-     CIPHER ROTATION
-  ========================================= */
+  /* CIPHER ROTATION */
 
-  const getPointerAngle = (event, element) => {
+  const getPointerAngle = (event) => {
+    const disk = event.currentTarget.parentElement
+      .getBoundingClientRect()
 
-    const rect = element.getBoundingClientRect()
-
-    const centerX = rect.left + rect.width / 2
-    const centerY = rect.top + rect.height / 2
+    const centerX = disk.left + disk.width / 2
+    const centerY = disk.top + disk.height / 2
 
     return Math.atan2(
       event.clientY - centerY,
       event.clientX - centerX
     ) * (180 / Math.PI)
-
   }
 
   const startCipherDrag = (event) => {
+    draggingCipher.current = true
 
-    if (event.button !== 0 && event.pointerType === 'mouse') return
+    previousAngle.current = getPointerAngle(event)
 
-    const element = event.currentTarget
-
-    cipherDrag.current = {
-      active: true,
-      startAngle: getPointerAngle(event, element),
-      startRotation: cipherRotation,
-    }
-
-    element.setPointerCapture(event.pointerId)
-
-    setIsDragging(true)
-
+    event.currentTarget.setPointerCapture(event.pointerId)
   }
 
   const moveCipherDrag = (event) => {
+    if (!draggingCipher.current) return
 
-    if (!cipherDrag.current.active) return
+    const angle = getPointerAngle(event)
 
-    const currentAngle = getPointerAngle(
-      event,
-      event.currentTarget
-    )
+    let difference = angle - previousAngle.current
 
-    let difference =
-      currentAngle - cipherDrag.current.startAngle
-
-    // Prevent jumps when crossing the 180-degree boundary.
+    // Prevent sudden rotation when crossing the 180° boundary.
 
     if (difference > 180) difference -= 360
     if (difference < -180) difference += 360
 
-    setCipherRotation(
-      cipherDrag.current.startRotation + difference
-    )
+    previousAngle.current = angle
 
+    currentRotation.current += difference
+
+    setCipherRotation(currentRotation.current)
   }
 
   const endCipherDrag = () => {
+    if (!draggingCipher.current) return
 
-    if (!cipherDrag.current.active) return
-
-    cipherDrag.current.active = false
-
-    setIsDragging(false)
+    draggingCipher.current = false
 
     // Snap to the nearest alphabet position.
 
-    setCipherRotation((current) =>
-      Math.round(current / LETTER_STEP) * LETTER_STEP
-    )
+    const snappedRotation =
+      Math.round(currentRotation.current / LETTER_STEP) *
+      LETTER_STEP
 
+    currentRotation.current = snappedRotation
+
+    setCipherRotation(snappedRotation)
   }
-
-  /* =========================================
-     START OF WEBSITE
-     PART 1
-  ========================================= */
 
   return (
     <div className="site">
+
 
       {/* HEADER */}
 
       <header className="header">
 
         <div className="header-left">
-
-          <a href="#top" className="logo">
-            221B
-          </a>
+          <a href="#top" className="logo">221B</a>
 
           <span className="header-divider"></span>
 
           <span className="header-label">
             ARCHIVAL SYSTEM / 001
           </span>
-
         </div>
 
         <nav className="header-nav">
-
           <a href="#databases">DATABASES</a>
           <a href="#archive">FLOWERS</a>
           <a href="#cipher">CIPHER</a>
           <a href="#morse">MORSE</a>
-
         </nav>
 
         <div className="status">
-
           <span className="status-dot"></span>
           ARCHIVE ONLINE
-
         </div>
 
       </header>
 
-      <main>
+      {/* MAIN CONTENT */}
 
-        {/* =================================
-            HERO
-        ================================= */}
+      <main id="top">
 
-        <section className="hero" id="top">
+        {/* HERO */}
+
+        <section className="hero">
 
           <div className="hero-label">
             221B / ARCHIVAL SYSTEM
@@ -268,42 +223,29 @@ function App() {
           <div className="hero-line"></div>
 
           <div className="hero-meta">
-
             <span>ARCHIVE STATUS</span>
             <strong>ACTIVE</strong>
-
           </div>
 
           <div className="hero-meta">
-
             <span>DATABASES</span>
             <strong>03</strong>
-
           </div>
 
         </section>
 
-        {/* =================================
-            01 / DATABASE INDEX
-        ================================= */}
+        {/* DATABASE INDEX / 01 */}
 
         <section className="databases" id="databases">
 
           <div className="section-heading">
-
             <span>01 / DATABASES</span>
             <span>ARCHIVE INDEX</span>
-
           </div>
 
           <div className="database-grid">
 
-            {/* BOTANICAL */}
-
-            <a
-              className="database-card"
-              href="#archive"
-            >
+            <a className="database-card" href="#archive">
 
               <span className="database-number">
                 DATABASE / 001
@@ -317,21 +259,14 @@ function App() {
               </p>
 
               <span className="database-status">
-                ACTIVE / {String(flowers.length).padStart(3, '0')} RECORDS
+                ACTIVE / 008 RECORDS
               </span>
 
-              <span className="database-arrow">
-                ↗
-              </span>
+              <span className="database-arrow">↗</span>
 
             </a>
 
-            {/* CIPHER */}
-
-            <a
-              className="database-card"
-              href="#cipher"
-            >
+            <a className="database-card" href="#cipher">
 
               <span className="database-number">
                 TOOL / 002
@@ -348,18 +283,11 @@ function App() {
                 ACTIVE
               </span>
 
-              <span className="database-arrow">
-                ↗
-              </span>
+              <span className="database-arrow">↗</span>
 
             </a>
 
-            {/* MORSE */}
-
-            <a
-              className="database-card"
-              href="#morse"
-            >
+            <a className="database-card" href="#morse">
 
               <span className="database-number">
                 TOOL / 003
@@ -368,17 +296,15 @@ function App() {
               <h2>MORSE</h2>
 
               <p>
-                A reference archive preserving Morse code
-                and written telegraphic communication.
+                A reference archive of Morse code and
+                written telegraphic communication.
               </p>
 
               <span className="database-status">
-                ACTIVE
+                ACTIVE / 026 LETTERS
               </span>
 
-              <span className="database-arrow">
-                ↗
-              </span>
+              <span className="database-arrow">↗</span>
 
             </a>
 
@@ -386,23 +312,13 @@ function App() {
 
         </section>
 
-        {/* =================================
-            02 / BOTANICAL ARCHIVE
-        ================================= */}
+        {/* BOTANICAL ARCHIVE / 02 */}
 
         <section className="archive" id="archive">
 
           <div className="section-heading">
-
             <span>02 / BOTANICAL</span>
-
-            <span>
-              {String(filteredFlowers.length).padStart(3, '0')}
-              {' / '}
-              {String(flowers.length).padStart(3, '0')}
-              {' RECORDS'}
-            </span>
-
+            <span>FIELD RECORDS / 008</span>
           </div>
 
           {/* SEARCH */}
@@ -424,94 +340,88 @@ function App() {
 
           <div className="flower-grid">
 
-            {filteredFlowers.map((flower) => (
+            {filteredFlowers.map((flower) => {
 
-              <article
-                className="flower-card"
-                key={flower.id}
-              >
+              const recordNumber = flowers.indexOf(flower) + 1
 
-                <div className="card-number">
-                  RECORD / {flower.id}
-                </div>
+              return (
 
-                <div className="card-main">
+                <article
+                  className="flower-card"
+                  key={flower.name}
+                >
 
-                  <img
-                    className="flower-image"
-                    src={flower.image}
-                    alt={flower.name}
-                    loading="lazy"
-                  />
+                  <div className="card-number">
+                    RECORD / {String(recordNumber).padStart(3, '0')}
+                  </div>
 
-                  <div className="flower-title">
+                  <div className="card-main">
 
-                    <h2>{flower.name}</h2>
+                    <img
+                      className="flower-image"
+                      src={flower.image}
+                      alt={flower.name}
+                      loading="lazy"
+                    />
 
-                    <p className="scientific">
-                      {flower.scientific}
-                    </p>
+                    <div className="flower-title">
+
+                      <h2>{flower.name}</h2>
+
+                      <p className="scientific">
+                        {flower.scientific}
+                      </p>
+
+                    </div>
+
+                    <div className="flower-message">
+
+                      <span>INTENDED MESSAGE</span>
+
+                      <p>“{flower.message}”</p>
+
+                    </div>
 
                   </div>
 
-                  <div className="flower-message">
+                  <div className="card-details">
 
-                    <span>INTENDED MESSAGE</span>
+                    <div>
+                      <span>FAMILY</span>
+                      <strong>{flower.family}</strong>
+                    </div>
 
-                    <p>
-                      “{flower.message}”
-                    </p>
+                    <div>
+                      <span>COLOUR</span>
+                      <strong>{flower.color}</strong>
+                    </div>
+
+                    <div>
+                      <span>BLOOM</span>
+                      <strong>{flower.season}</strong>
+                    </div>
 
                   </div>
 
-                </div>
+                  <div className="card-arrow">↗</div>
 
-                <div className="card-details">
+                </article>
 
-                  <div>
-                    <span>FAMILY</span>
-                    <strong>{flower.family}</strong>
-                  </div>
-
-                  <div>
-                    <span>COLOUR</span>
-                    <strong>{flower.color}</strong>
-                  </div>
-
-                  <div>
-                    <span>BLOOM</span>
-                    <strong>{flower.season}</strong>
-                  </div>
-
-                </div>
-
-                <div className="card-arrow">
-                  ↗
-                </div>
-
-              </article>
-
-            ))}
-
-            {filteredFlowers.length === 0 && (
-
-              <p className="no-results">
-                NO RECORDS FOUND.
-                <br />
-                TRY ANOTHER SEARCH.
-              </p>
-
-            )}
+              )
+            })}
 
           </div>
 
+          {filteredFlowers.length === 0 && (
+            <p className="empty-results">
+              NO RECORDS FOUND.
+            </p>
+          )}
+
         </section>
 
-        {/* PART 2 CONTINUES HERE */}
 
-        {/* =================================
-            03 / CIPHER
-        ================================= */}
+        {/* CIPHER / 03 */}
 
         <section className="cipher-section" id="cipher">
 
@@ -530,8 +440,7 @@ function App() {
 
             <p>
               A rotating alphabet disk for manual substitution.
-              Align the inner alphabet with the fixed outer ring
-              to construct or decipher a message.
+              Align the alphabets to construct or decipher a message.
             </p>
 
           </div>
@@ -540,7 +449,7 @@ function App() {
 
             <div className="cipher-disk">
 
-              {/* OUTER FIXED ALPHABET */}
+              {/* OUTER ALPHABET */}
 
               <div className="cipher-ring outer-ring">
 
@@ -554,7 +463,7 @@ function App() {
                       style={{
                         transform: `
                           rotate(${angle}deg)
-                          translateY(-155px)
+                          translateY(calc(min(82vw, 330px) * -0.41))
                           rotate(-${angle}deg)
                         `,
                       }}
@@ -569,9 +478,7 @@ function App() {
               {/* INNER ROTATING ALPHABET */}
 
               <div
-                className={`cipher-ring inner-ring ${
-                  isDragging ? 'is-dragging' : ''
-                }`}
+                className="cipher-ring inner-ring"
                 style={{
                   transform: `rotate(${cipherRotation}deg)`,
                 }}
@@ -580,8 +487,7 @@ function App() {
                 onPointerUp={endCipherDrag}
                 onPointerCancel={endCipherDrag}
                 onLostPointerCapture={endCipherDrag}
-                role="group"
-                aria-label="Draggable inner cipher alphabet"
+                role="presentation"
               >
 
                 {alphabet.map((letter, index) => {
@@ -594,7 +500,7 @@ function App() {
                       style={{
                         transform: `
                           rotate(${angle}deg)
-                          translateY(-105px)
+                          translateY(calc(min(82vw, 330px) * -0.28))
                           rotate(-${angle + cipherRotation}deg)
                         `,
                       }}
@@ -605,6 +511,10 @@ function App() {
                 })}
 
               </div>
+
+              {/* FIXED ALIGNMENT INDICATOR */}
+
+              <div className="cipher-indicator"></div>
 
               {/* CENTRE */}
 
@@ -619,9 +529,9 @@ function App() {
               <span>FIELD INSTRUCTION</span>
 
               <p>
-                Drag the inner ring to rotate the alphabet.
-                Release to snap into the nearest letter position.
-                Use the fixed indicator to align corresponding letters.
+                Drag the inner alphabet to establish a substitution.
+                Release to automatically align the nearest letter
+                with the fixed indicator.
               </p>
 
             </div>
@@ -630,9 +540,7 @@ function App() {
 
         </section>
 
-        {/* =================================
-            04 / MORSE CODE
-        ================================= */}
+        {/* MORSE / 04 */}
 
         <section className="morse-section" id="morse">
 
@@ -706,9 +614,7 @@ function App() {
 
         </section>
 
-        {/* =================================
-            05 / METHOD
-        ================================= */}
+        {/* ABOUT / 05 */}
 
         <section className="about" id="about">
 
@@ -737,15 +643,11 @@ function App() {
 
       </main>
 
-      {/* =================================
-          FOOTER
-      ================================= */}
+      {/* FOOTER */}
 
       <footer>
-
         <span>221B ARCHIVE</span>
         <span>EST. 2026</span>
-
       </footer>
 
     </div>
