@@ -1102,3 +1102,92 @@ section[id] {
   pointer-events: none;
 }
 
+
+/* MOBILE CIPHER DIVIDER VISIBILITY FIX */
+
+.cipher-disk {
+  position: relative;
+  isolation: isolate;
+  overflow: visible;
+}
+
+.cipher-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+}
+
+/* Keep divider lines above the disk background */
+
+.outer-ring::before,
+.inner-ring::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Keep letters visible above divider lines */
+
+.cipher-ring span {
+  z-index: 2;
+}
+
+/* Ensure inner wheel remains interactive */
+
+.inner-ring {
+  z-index: 2;
+}
+
+.outer-ring {
+  z-index: 1;
+}
+
+/* Divider contrast on smaller screens */
+
+@media (max-width: 700px) {
+
+  .outer-ring::before {
+    background: repeating-conic-gradient(
+      from -6.923deg,
+      transparent 0deg 13.75deg,
+      rgba(233, 237, 245, 0.38) 13.75deg 14deg
+    );
+
+    -webkit-mask: radial-gradient(
+      circle,
+      transparent 0 48%,
+      #000 48.5% 100%
+    );
+
+    mask: radial-gradient(
+      circle,
+      transparent 0 48%,
+      #000 48.5% 100%
+    );
+  }
+
+  .inner-ring::before {
+    background: repeating-conic-gradient(
+      from -6.923deg,
+      transparent 0deg 13.75deg,
+      rgba(58, 117, 216, 0.65) 13.75deg 14deg
+    );
+
+    -webkit-mask: radial-gradient(
+      circle,
+      transparent 0 48%,
+      #000 48.5% 100%
+    );
+
+    mask: radial-gradient(
+      circle,
+      transparent 0 48%,
+      #000 48.5% 100%
+    );
+  }
+
+}
+
