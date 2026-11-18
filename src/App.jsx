@@ -124,23 +124,40 @@ const LETTER_STEP = 360 / 26
 
 function App() {
 
-  /* SEARCH */
+  /* =====================================
+     BOTANICAL SEARCH
+  ===================================== */
 
   const [search, setSearch] = useState('')
 
   const filteredFlowers = flowers.filter((flower) =>
     `${flower.name} ${flower.scientific} ${flower.family}`
       .toLowerCase()
-      .includes(search.toLowerCase())
+      .includes(search.trim().toLowerCase())
   )
 
-  /* CIPHER ROTATION */
+  /* =====================================
+     CIPHER ROTATION
+  ===================================== */
 
   const [cipherRotation, setCipherRotation] = useState(0)
 
   const draggingCipher = useRef(false)
   const previousAngle = useRef(null)
-  const dragStartRotation = useRef(0)
+
+  /* NORMALIZE ROTATION */
+
+  const normalizeRotation = (rotation) => {
+    return ((rotation % 360) + 360) % 360
+  }
+
+  /* GET CURRENT ALPHABET OFFSET */
+
+  const getCipherOffset = () => {
+    return Math.round(cipherRotation / LETTER_STEP) % 26
+  }
+
+  /* GET POINTER ANGLE */
 
   const getPointerAngle = (event) => {
     const disk = event.currentTarget.getBoundingClientRect()
@@ -157,10 +174,11 @@ function App() {
   /* START DRAGGING */
 
   const startCipherDrag = (event) => {
+    if (event.button !== undefined && event.button !== 0) return
+
     draggingCipher.current = true
 
     previousAngle.current = getPointerAngle(event)
-    dragStartRotation.current = cipherRotation
 
     event.currentTarget.setPointerCapture(event.pointerId)
   }
@@ -177,7 +195,9 @@ function App() {
     if (difference > 180) difference -= 360
     if (difference < -180) difference += 360
 
-    setCipherRotation((current) => current + difference)
+    setCipherRotation((current) =>
+      normalizeRotation(current + difference)
+    )
 
     previousAngle.current = currentAngle
   }
@@ -191,562 +211,566 @@ function App() {
     previousAngle.current = null
 
     setCipherRotation((current) =>
-      Math.round(current / LETTER_STEP) * LETTER_STEP
+      normalizeRotation(
+        Math.round(current / LETTER_STEP) * LETTER_STEP
+      )
     )
   }
 
-  /* KEYBOARD SUPPORT */
+  /* KEYBOARD CONTROLS */
 
   const rotateCipher = (direction) => {
     setCipherRotation((current) =>
-      Math.round(current / LETTER_STEP) * LETTER_STEP +
-      direction * LETTER_STEP
+      normalizeRotation(
+        Math.round(current / LETTER_STEP) * LETTER_STEP +
+        direction * LETTER_STEP
+      )
     )
   }
 
-  /* =========================================
-     JSX CONTINUES IN PART 2
-  ========================================= */
+  /* RESET CIPHER */
+
+  const resetCipher = () => {
+    setCipherRotation(0)
+  }
+
+  /* MOVE CIPHER TO LAST POSITION */
+
+  const setCipherToEnd = () => {
+    setCipherRotation(25 * LETTER_STEP)
+  }
+
+  /* =====================================
+     JSX
+  ===================================== */
 
   return (
     <div className="site">
-      
-{/* =========================================
-    HEADER / NAVIGATION
-========================================= */}
 
-<header className="header">
+      {/* HEADER / NAVIGATION */}
 
-  <div className="header-left">
+      <header className="header">
 
-    <a href="#top" className="logo">
-      221B
-    </a>
+        <div className="header-left">
 
-    <span className="header-divider"></span>
+          <a href="#top" className="logo">
+            221B
+          </a>
 
-    <span className="header-label">
-      ARCHIVAL SYSTEM / 001
-    </span>
+          <span className="header-divider"></span>
 
-  </div>
+          <span className="header-label">
+            ARCHIVAL SYSTEM / 001
+          </span>
 
-  <nav className="header-nav">
-
-    <a href="#databases">DATABASES</a>
-    <a href="#archive">FLOWERS</a>
-    <a href="#cipher">CIPHER</a>
-    <a href="#morse">MORSE</a>
-
-  </nav>
-
-</header>
-
-
-{/* =========================================
-    MAIN CONTENT
-========================================= */}
-
-<main id="top">
-
-  {/* =====================================
-      01 / HERO
-  ===================================== */}
-
-  <section className="hero">
-
-    <div className="hero-label">
-      221B / ARCHIVAL SYSTEM
-    </div>
-
-    <h1>
-      THE
-      <br />
-      <em>ARCHIVE.</em>
-    </h1>
-
-    <p className="hero-text">
-      A collection of databases documenting objects,
-      organisms, systems, symbols, and methods
-      of communication.
-    </p>
-
-    <div className="hero-line"></div>
-
-    <div className="hero-meta">
-      <span>ARCHIVE STATUS</span>
-      <strong>ACTIVE</strong>
-    </div>
-
-    <div className="hero-meta">
-      <span>DATABASES</span>
-      <strong>04</strong>
-    </div>
-
-  </section>
-
-
-  {/* =====================================
-      02 / DATABASE INDEX
-  ===================================== */}
-
-  <section className="databases" id="databases">
-
-    <div className="section-heading">
-      <span>01 / DATABASES</span>
-      <span>ARCHIVE INDEX</span>
-    </div>
-
-    <div className="database-grid">
-
-      <a className="database-card" href="#archive">
-
-        <span className="database-number">
-          DATABASE / 001
-        </span>
-
-        <h2>BOTANICAL</h2>
-
-        <p>
-          Flowers, their histories, characteristics,
-          symbolism, and intended messages.
-        </p>
-
-        <span className="database-status">
-          ACTIVE / {String(flowers.length).padStart(3, '0')} RECORDS
-        </span>
-
-        <span className="database-arrow">↗</span>
-
-      </a>
-
-
-      <a className="database-card" href="#cipher">
-
-        <span className="database-number">
-          TOOL / 002
-        </span>
-
-        <h2>CIPHER</h2>
-
-        <p>
-          An interactive alphabet cipher disk for
-          encoding and decoding messages.
-        </p>
-
-        <span className="database-status">
-          ACTIVE
-        </span>
-
-        <span className="database-arrow">↗</span>
-
-      </a>
-
-
-      <a className="database-card" href="#morse">
-
-        <span className="database-number">
-          DATABASE / 003
-        </span>
-
-        <h2>MORSE</h2>
-
-        <p>
-          A reference archive of Morse code and
-          written telegraphic communication.
-        </p>
-
-        <span className="database-status">
-          ACTIVE / 026 RECORDS
-        </span>
-
-        <span className="database-arrow">↗</span>
-
-      </a>
-
-    </div>
-
-  </section>
-
-
-  {/* =====================================
-      03 / BOTANICAL ARCHIVE
-  ===================================== */}
-
-  <section className="archive" id="archive">
-
-    <div className="section-heading">
-      <span>02 / BOTANICAL</span>
-      <span>FIELD RECORDS</span>
-    </div>
-
-
-    {/* SEARCH */}
-
-    <div className="search-box">
-
-      <span>SEARCH /</span>
-
-      <input
-        type="text"
-        placeholder="Enter flower, genus, or family..."
-        value={search}
-        onChange={(event) => setSearch(event.target.value)}
-      />
-
-    </div>
-
-
-    {/* FLOWER RECORDS */}
-
-    <div className="flower-grid">
-
-      {filteredFlowers.map((flower) => (
-
-        <article className="flower-card" key={flower.name}>
-
-          <div className="card-number">
-            RECORD / {String(
-              flowers.indexOf(flower) + 1
-            ).padStart(3, '0')}
-          </div>
-
-
-          <div className="card-main">
-
-            <img
-              className="flower-image"
-              src={flower.image}
-              alt={flower.name}
-              loading="lazy"
-            />
-
-
-            <div className="flower-title">
-
-              <h2>{flower.name}</h2>
-
-              <p className="scientific">
-                {flower.scientific}
-              </p>
-
-            </div>
-
-
-            <div className="flower-message">
-
-              <span>INTENDED MESSAGE</span>
-
-              <p>
-                “{flower.message}”
-              </p>
-
-            </div>
-
-          </div>
-
-
-          {/* FLOWER DETAILS */}
-
-          <div className="card-details">
-
-            <div>
-              <span>FAMILY</span>
-              <strong>{flower.family}</strong>
-            </div>
-
-            <div>
-              <span>COLOUR</span>
-              <strong>{flower.color}</strong>
-            </div>
-
-            <div>
-              <span>BLOOM</span>
-              <strong>{flower.season}</strong>
-            </div>
-
-          </div>
-
-          <div className="card-arrow">↗</div>
-
-        </article>
-
-      ))}
-
-
-      {/* NO SEARCH RESULTS */}
-
-      {filteredFlowers.length === 0 && (
-
-        <div className="empty-results">
-          NO MATCHING RECORDS FOUND.
         </div>
 
-      )}
+        <nav
+          className="header-nav"
+          aria-label="Main navigation"
+        >
+
+          <a href="#databases">DATABASES</a>
+          <a href="#archive">FLOWERS</a>
+          <a href="#cipher">CIPHER</a>
+          <a href="#morse">MORSE</a>
+
+        </nav>
+
+      </header>
+
+      {/* MAIN CONTENT */}
+
+      <main id="top">
+
+        {/* =====================================
+            01 / HERO
+        ===================================== */}
+
+        <section className="hero">
+
+          <div className="hero-label">
+            221B / ARCHIVAL SYSTEM
+          </div>
+
+          <h1>
+            THE
+            <br />
+            <em>ARCHIVE.</em>
+          </h1>
+
+          <p className="hero-text">
+            A collection of databases documenting objects,
+            organisms, systems, symbols, and methods
+            of communication.
+          </p>
+
+          <div className="hero-line"></div>
+
+          <div className="hero-meta">
+            <span>ARCHIVE STATUS</span>
+            <strong>ACTIVE</strong>
+          </div>
+
+          <div className="hero-meta">
+            <span>DATABASES</span>
+            <strong>04</strong>
+          </div>
+
+        </section>
+
+        {/* =====================================
+            02 / DATABASE INDEX
+        ===================================== */}
+
+        <section className="databases" id="databases">
+
+          <div className="section-heading">
+            <span>01 / DATABASES</span>
+            <span>ARCHIVE INDEX</span>
+          </div>
+
+          <div className="database-grid">
+
+            <a className="database-card" href="#archive">
+
+              <span className="database-number">
+                DATABASE / 001
+              </span>
+
+              <h2>BOTANICAL</h2>
+
+              <p>
+                Flowers, their histories, characteristics,
+                symbolism, and intended messages.
+              </p>
+
+              <span className="database-status">
+                ACTIVE / {String(flowers.length).padStart(3, '0')} RECORDS
+              </span>
+
+              <span className="database-arrow">↗</span>
+
+            </a>
+
+            <a className="database-card" href="#cipher">
+
+              <span className="database-number">
+                TOOL / 002
+              </span>
+
+              <h2>CIPHER</h2>
+
+              <p>
+                An interactive alphabet cipher disk for
+                encoding and decoding messages.
+              </p>
+
+              <span className="database-status">
+                ACTIVE
+              </span>
+
+              <span className="database-arrow">↗</span>
+
+            </a>
+
+            <a className="database-card" href="#morse">
+
+              <span className="database-number">
+                DATABASE / 003
+              </span>
+
+              <h2>MORSE</h2>
+
+              <p>
+                A reference archive of Morse code and
+                written telegraphic communication.
+              </p>
+
+              <span className="database-status">
+                ACTIVE / 026 RECORDS
+              </span>
+
+              <span className="database-arrow">↗</span>
+
+            </a>
+
+          </div>
+
+        </section>
+
+
+        {/* =====================================
+            03 / BOTANICAL ARCHIVE
+        ===================================== */}
+
+        <section className="archive" id="archive">
+
+          <div className="section-heading">
+            <span>02 / BOTANICAL</span>
+            <span>FIELD RECORDS</span>
+          </div>
+
+          {/* SEARCH */}
+
+          <div className="search-box">
+
+            <span>SEARCH /</span>
+
+            <input
+              type="search"
+              aria-label="Search botanical records"
+              placeholder="Enter flower, genus, or family..."
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+            />
+
+          </div>
+
+          {/* FLOWER RECORDS */}
+
+          <div className="flower-grid">
+
+            {filteredFlowers.map((flower) => (
+
+              <article className="flower-card" key={flower.name}>
+
+                <div className="card-number">
+                  RECORD / {String(
+                    flowers.indexOf(flower) + 1
+                  ).padStart(3, '0')}
+                </div>
+
+                <div className="card-main">
+
+                  <img
+                    className="flower-image"
+                    src={flower.image}
+                    alt={flower.name}
+                    loading="lazy"
+                  />
+
+                  <div className="flower-title">
+
+                    <h2>{flower.name}</h2>
+
+                    <p className="scientific">
+                      {flower.scientific}
+                    </p>
+
+                  </div>
+
+                  <div className="flower-message">
+
+                    <span>INTENDED MESSAGE</span>
+
+                    <p>
+                      “{flower.message}”
+                    </p>
+
+                  </div>
+
+                </div>
+
+                {/* FLOWER DETAILS */}
+
+                <div className="card-details">
+
+                  <div>
+                    <span>FAMILY</span>
+                    <strong>{flower.family}</strong>
+                  </div>
+
+                  <div>
+                    <span>COLOUR</span>
+                    <strong>{flower.color}</strong>
+                  </div>
+
+                  <div>
+                    <span>BLOOM</span>
+                    <strong>{flower.season}</strong>
+                  </div>
+
+                </div>
+
+                <div className="card-arrow">↗</div>
+
+              </article>
+
+            ))}
+
+            {/* NO SEARCH RESULTS */}
+
+            {filteredFlowers.length === 0 && (
+
+              <div className="empty-results">
+                NO MATCHING RECORDS FOUND.
+              </div>
+
+            )}
+
+          </div>
+
+        </section>
+
+        {/* =========================================
+            04 / CIPHER
+        ========================================= */}
+
+        <section className="cipher-section" id="cipher">
+
+          <div className="section-heading">
+            <span>03 / CIPHER</span>
+            <span>ALPHABETIC SUBSTITUTION</span>
+          </div>
+
+          <div className="cipher-intro">
+
+            <h2>
+              ALPHABET
+              <br />
+              <em>CIPHER.</em>
+            </h2>
+
+            <p>
+              A rotating alphabet disk for manual substitution.
+              Align the alphabets to construct or decipher
+              a message.
+            </p>
+
+          </div>
+
+          <div className="cipher-tool">
+
+            <div className="cipher-disk">
+
+              {/* FIXED ALIGNMENT INDICATOR */}
+
+              <div className="cipher-indicator"></div>
+
+              {/* OUTER ALPHABET */}
+
+              <div className="cipher-ring outer-ring">
+
+                {alphabet.map((letter, index) => {
+
+                  const angle = index * LETTER_STEP
+
+                  return (
+
+                    <span
+                      key={letter}
+                      style={{
+                        transform: `
+                          rotate(${angle}deg)
+                          translateY(-45%)
+                          rotate(-${angle}deg)
+                        `,
+                      }}
+                    >
+                      {letter}
+                    </span>
+
+                  )
+
+                })}
+
+              </div>
+
+              {/* INNER ROTATING ALPHABET */}
+
+              <div
+                className="cipher-ring inner-ring"
+
+                style={{
+                  transform: `rotate(${cipherRotation}deg)`,
+                }}
+
+                onPointerDown={startCipherDrag}
+                onPointerMove={moveCipherDrag}
+                onPointerUp={endCipherDrag}
+                onPointerCancel={endCipherDrag}
+                onLostPointerCapture={endCipherDrag}
+
+                role="slider"
+                tabIndex={0}
+                aria-label="Cipher wheel rotation"
+                aria-valuenow={getCipherOffset()}
+                aria-valuemin={0}
+                aria-valuemax={25}
+                aria-valuetext={`Alphabet offset ${getCipherOffset()}`}
+
+                onKeyDown={(event) => {
+
+                  if (event.key === 'ArrowLeft') {
+                    event.preventDefault()
+                    rotateCipher(-1)
+                  }
+
+                  if (event.key === 'ArrowRight') {
+                    event.preventDefault()
+                    rotateCipher(1)
+                  }
+
+                  if (event.key === 'Home') {
+                    event.preventDefault()
+                    resetCipher()
+                  }
+
+                  if (event.key === 'End') {
+                    event.preventDefault()
+                    setCipherToEnd()
+                  }
+
+                }}
+              >
+
+                {alphabet.map((letter, index) => {
+
+                  const angle = index * LETTER_STEP
+
+                  return (
+
+                    <span
+                      key={letter}
+                      style={{
+                        transform: `
+                          rotate(${angle}deg)
+                          translateY(-32%)
+                          rotate(-${angle + cipherRotation}deg)
+                        `,
+                      }}
+                    >
+                      {letter}
+                    </span>
+
+                  )
+
+                })}
+
+              </div>
+
+              {/* CENTRE */}
+
+              <div className="cipher-center">
+                221B
+              </div>
+
+            </div>
+
+            {/* INSTRUCTIONS */}
+
+            <div className="cipher-instruction">
+
+              <span>FIELD INSTRUCTION</span>
+
+              <p>
+                Drag the inner alphabet to establish a substitution.
+                Release to snap the wheel into its nearest
+                letter alignment. You can also use the left
+                and right arrow keys to rotate the wheel.
+              </p>
+
+            </div>
+
+          </div>
+
+        </section>
+
+        {/* =========================================
+            05 / MORSE CODE
+        ========================================= */}
+
+        <section className="morse-section" id="morse">
+
+          <div className="section-heading">
+            <span>04 / MORSE</span>
+            <span>TELEGRAPHIC REFERENCE</span>
+          </div>
+
+          <div className="morse-intro">
+
+            <h2>
+              MORSE
+              <br />
+              <em>CODE.</em>
+            </h2>
+
+            <p>
+              A reference archive of the Morse alphabet,
+              preserving the fundamental language of
+              telegraphic communication.
+            </p>
+
+          </div>
+
+          <div className="morse-grid">
+
+            {morseLetters.map(([letter, code]) => (
+
+              <div className="morse-card" key={letter}>
+
+                <span className="morse-letter">
+                  {letter}
+                </span>
+
+                <span className="morse-code">
+                  {code}
+                </span>
+
+              </div>
+
+            ))}
+
+          </div>
+
+        </section>
+
+        {/* =========================================
+            06 / METHOD
+        ========================================= */}
+
+        <section className="about" id="about">
+
+          <div className="section-heading">
+            <span>05 / METHOD</span>
+            <span>FIELD NOTES</span>
+          </div>
+
+          <div className="about-content">
+
+            <h2>
+              Nothing is
+              <br />
+              merely ornamental.
+            </h2>
+
+            <p>
+              The archive documents the details others overlook:
+              structure, history, symbolism, systems, patterns,
+              and the hidden languages used to communicate.
+            </p>
+
+          </div>
+
+        </section>
+
+      </main>
+
+      {/* =========================================
+          FOOTER
+      ========================================= */}
+
+      <footer>
+
+        <span>221B ARCHIVE</span>
+
+        <span>EST. 2026</span>
+
+      </footer>
 
     </div>
-
-  </section>
-
-
-{/* =========================================
-    04 / CIPHER
-========================================= */}
-
-<section className="cipher-section" id="cipher">
-
-  <div className="section-heading">
-    <span>03 / CIPHER</span>
-    <span>ALPHABETIC SUBSTITUTION</span>
-  </div>
-
-
-  <div className="cipher-intro">
-
-    <h2>
-      ALPHABET
-      <br />
-      <em>CIPHER.</em>
-    </h2>
-
-    <p>
-      A rotating alphabet disk for manual substitution.
-      Align the alphabets to construct or decipher
-      a message.
-    </p>
-
-  </div>
-
-
-  <div className="cipher-tool">
-
-    <div className="cipher-disk">
-
-      {/* FIXED ALIGNMENT INDICATOR */}
-
-      <div className="cipher-indicator"></div>
-
-
-      {/* OUTER ALPHABET */}
-
-      <div className="cipher-ring outer-ring">
-
-        {alphabet.map((letter, index) => {
-
-          const angle = index * LETTER_STEP
-
-          return (
-
-            <span
-              key={letter}
-              style={{
-                transform: `
-                  rotate(${angle}deg)
-                  translateY(-45%)
-                  rotate(-${angle}deg)
-                `,
-              }}
-            >
-              {letter}
-            </span>
-
-          )
-
-        })}
-
-      </div>
-
-
-      {/* INNER ROTATING ALPHABET */}
-
-      <div
-        className="cipher-ring inner-ring"
-
-        style={{
-          transform: `rotate(${cipherRotation}deg)`,
-        }}
-
-        onPointerDown={startCipherDrag}
-        onPointerMove={moveCipherDrag}
-        onPointerUp={endCipherDrag}
-        onPointerCancel={endCipherDrag}
-
-        role="slider"
-        tabIndex={0}
-        aria-label="Cipher wheel rotation"
-        aria-valuenow={Math.round(cipherRotation)}
-        aria-valuemin={0}
-        aria-valuemax={360}
-
-        onKeyDown={(event) => {
-
-          if (event.key === 'ArrowLeft') {
-            rotateCipher(-1)
-          }
-
-          if (event.key === 'ArrowRight') {
-            rotateCipher(1)
-          }
-
-        }}
-      >
-
-        {alphabet.map((letter, index) => {
-
-          const angle = index * LETTER_STEP
-
-          return (
-
-            <span
-              key={letter}
-              style={{
-                transform: `
-                  rotate(${angle}deg)
-                  translateY(-32%)
-                  rotate(-${angle + cipherRotation}deg)
-                `,
-              }}
-            >
-              {letter}
-            </span>
-
-          )
-
-        })}
-
-      </div>
-
-
-      {/* CENTRE */}
-
-      <div className="cipher-center">
-        221B
-      </div>
-
-    </div>
-
-
-    {/* INSTRUCTIONS */}
-
-    <div className="cipher-instruction">
-
-      <span>FIELD INSTRUCTION</span>
-
-      <p>
-        Drag the inner alphabet to establish a substitution.
-        Release to snap the wheel into its nearest
-        letter alignment.
-      </p>
-
-    </div>
-
-  </div>
-
-</section>
-
-
-{/* =========================================
-    05 / MORSE CODE
-========================================= */}
-
-<section className="morse-section" id="morse">
-
-  <div className="section-heading">
-    <span>04 / MORSE</span>
-    <span>TELEGRAPHIC REFERENCE</span>
-  </div>
-
-
-  <div className="morse-intro">
-
-    <h2>
-      MORSE
-      <br />
-      <em>CODE.</em>
-    </h2>
-
-    <p>
-      A reference archive of the Morse alphabet,
-      preserving the fundamental language of
-      telegraphic communication.
-    </p>
-
-  </div>
-
-
-  <div className="morse-grid">
-
-    {morseLetters.map(([letter, code]) => (
-
-      <div className="morse-card" key={letter}>
-
-        <span className="morse-letter">
-          {letter}
-        </span>
-
-        <span className="morse-code">
-          {code}
-        </span>
-
-      </div>
-
-    ))}
-
-  </div>
-
-</section>
-
-
-{/* =========================================
-    06 / METHOD
-========================================= */}
-
-<section className="about" id="about">
-
-  <div className="section-heading">
-    <span>05 / METHOD</span>
-    <span>FIELD NOTES</span>
-  </div>
-
-
-  <div className="about-content">
-
-    <h2>
-      Nothing is
-      <br />
-      merely ornamental.
-    </h2>
-
-    <p>
-      The archive documents the details others overlook:
-      structure, history, symbolism, systems, patterns,
-      and the hidden languages used to communicate.
-    </p>
-
-  </div>
-
-</section>
-
-
-</main>
-
-
-{/* =========================================
-    FOOTER
-========================================= */}
-
-<footer>
-
-  <span>221B ARCHIVE</span>
-
-  <span>EST. 2026</span>
-
-</footer>
-
-
-</div>
   )
 }
 
 export default App
-

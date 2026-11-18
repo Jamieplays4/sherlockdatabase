@@ -1,7 +1,7 @@
 
 /* =========================================
    221B ARCHIVE
-   COMPLETE MOBILE-FIRST STYLESHEET
+   COMPLETE STYLESHEET
    PART 1 / FOUNDATION, HEADER, HERO,
    DATABASES AND BOTANICAL ARCHIVE
 ========================================= */
@@ -123,6 +123,7 @@ input {
   z-index: 100;
 
   width: 100%;
+  min-width: 0;
   height: 64px;
 
   padding: 0 var(--page-padding);
@@ -145,6 +146,7 @@ input {
   align-items: center;
   gap: 10px;
 
+  min-width: 0;
   flex-shrink: 0;
 }
 
@@ -162,6 +164,8 @@ input {
   width: 1px;
   height: 18px;
 
+  flex-shrink: 0;
+
   background: rgba(233, 237, 245, 0.15);
 }
 
@@ -171,6 +175,7 @@ input {
   font-family: var(--font-mono);
   font-size: 7px;
   letter-spacing: 0.1em;
+  white-space: nowrap;
 }
 
 /* HORIZONTAL MOBILE NAVIGATION */
@@ -180,7 +185,7 @@ input {
   align-items: center;
   gap: 17px;
 
-  flex: 1;
+  flex: 1 1 auto;
   min-width: 0;
 
   overflow-x: auto;
@@ -188,6 +193,7 @@ input {
 
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
 }
 
 .header-nav::-webkit-scrollbar {
@@ -199,6 +205,7 @@ input {
 
   color: var(--text-secondary);
   text-decoration: none;
+  white-space: nowrap;
 
   font-family: var(--font-mono);
   font-size: 8px;
@@ -512,6 +519,8 @@ input {
 
   column-gap: 18px;
   align-items: center;
+
+  min-width: 0;
 }
 
 .flower-image {
@@ -546,7 +555,9 @@ input {
   line-height: 0.9;
   letter-spacing: -0.04em;
 
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
+  word-break: normal;
+  hyphens: auto;
 }
 
 .scientific {
@@ -558,6 +569,8 @@ input {
   font-size: 10px;
   font-style: italic;
   line-height: 1.5;
+
+  overflow-wrap: anywhere;
 }
 
 /* FLOWER MESSAGE */
@@ -594,6 +607,8 @@ input {
   font-size: 22px;
   font-style: italic;
   line-height: 1.1;
+
+  overflow-wrap: anywhere;
 }
 
 /* FLOWER DETAILS */
@@ -654,11 +669,6 @@ input {
   letter-spacing: 0.12em;
 }
 
-
-/* =========================================
-   221B ARCHIVE
-   PART 2 / CIPHER WHEEL
-========================================= */
 
 /* =========================================
    09. CIPHER SECTION
@@ -788,6 +798,8 @@ input {
   touch-action: none;
 
   will-change: transform;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .inner-ring:active {
@@ -811,11 +823,6 @@ input {
     transparent 0deg 13.75deg,
     rgba(233, 237, 245, 0.32) 13.75deg 14deg
   );
-
-  /*
-    Keep only the outer alphabet band.
-    The centre remains transparent.
-  */
 
   -webkit-mask: radial-gradient(
     circle,
@@ -849,11 +856,6 @@ input {
     transparent 0deg 13.75deg,
     rgba(58, 117, 216, 0.65) 13.75deg 14deg
   );
-
-  /*
-    Keep only the inner alphabet band.
-    These lines rotate with the inner ring.
-  */
 
   -webkit-mask: radial-gradient(
     circle,
@@ -1039,13 +1041,6 @@ input {
 
 }
 
-
-/* =========================================
-   221B ARCHIVE
-   PART 3 / MORSE, ABOUT, FOOTER
-   AND FINAL RESPONSIVE REFINEMENTS
-========================================= */
-
 /* =========================================
    20. MORSE SECTION
 ========================================= */
@@ -1200,6 +1195,7 @@ footer {
   letter-spacing: 0.12em;
 }
 
+
 /* =========================================
    24. TOUCH INTERACTIONS
 ========================================= */
@@ -1229,15 +1225,26 @@ input {
   }
 
   .header {
-    gap: 10px;
+    padding-left: 12px;
+    padding-right: 12px;
+    gap: 8px;
+  }
+
+  .header-left {
+    gap: 7px;
   }
 
   .header-left .logo {
-    font-size: 24px;
+    font-size: 22px;
+  }
+
+  .header-label {
+    font-size: 6px;
+    letter-spacing: 0.06em;
   }
 
   .header-nav {
-    gap: 13px;
+    gap: 11px;
   }
 
   .header-nav a {
@@ -1253,17 +1260,17 @@ input {
   }
 
   .card-main {
-    grid-template-columns: 90px minmax(0, 1fr);
-    column-gap: 14px;
+    grid-template-columns: 85px minmax(0, 1fr);
+    column-gap: 12px;
   }
 
   .flower-image {
-    width: 90px;
+    width: 85px;
     height: 105px;
   }
 
   .card-main h2 {
-    font-size: 30px;
+    font-size: clamp(24px, 8vw, 30px);
   }
 
   .card-details {
@@ -1325,7 +1332,7 @@ input {
 }
 
 /* =========================================
-   27. TABLET AND DESKTOP SAFETY
+   27. TABLET AND DESKTOP
 ========================================= */
 
 @media (min-width: 700px) {
@@ -1362,11 +1369,44 @@ input {
 }
 
 /* =========================================
-   28. FINAL SAFETY
+   28. KEYBOARD ACCESSIBILITY
+========================================= */
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+[role="slider"]:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 4px;
+}
+
+.header-nav a:focus-visible {
+  color: var(--text-primary);
+}
+
+.search-box input:focus-visible {
+  outline: none;
+  border-bottom: 1px solid var(--blue);
+}
+
+.inner-ring:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 5px;
+}
+
+/* =========================================
+   29. ADDITIONAL LAYOUT SAFETY
 ========================================= */
 
 img {
   max-width: 100%;
+}
+
+.flower-card,
+.card-main,
+.flower-title,
+.flower-message {
+  min-width: 0;
 }
 
 section {
@@ -1378,5 +1418,6 @@ section {
   background: rgba(58, 117, 216, 0.35);
 }
 
-/* END OF APP.CSS */
-
+/* =========================================
+   END OF 221B ARCHIVE APP.CSS
+========================================= */
