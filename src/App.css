@@ -765,6 +765,9 @@ input {
   box-shadow:
     0 0 0 8px rgba(58, 117, 216, 0.025),
     0 0 0 9px rgba(233, 237, 245, 0.06);
+
+  --outer-radius: 43%;
+  --inner-radius: 27%;
 }
 
 /* =========================================
@@ -874,8 +877,9 @@ input {
   pointer-events: none;
 }
 
+
 /* =========================================
-   15. CIPHER LETTERS
+   15. CIPHER LETTERS — FIXED SCALE
 ========================================= */
 
 .cipher-ring span {
@@ -912,6 +916,19 @@ input {
 .inner-ring span {
   color: var(--blue);
 }
+
+/* =========================================
+   15A. CORRECT ALPHABET RADII
+========================================= */
+
+.outer-ring span {
+  transform-origin: center;
+}
+
+.inner-ring span {
+  transform-origin: center;
+}
+
 
 /* =========================================
    16. CIPHER CENTRE

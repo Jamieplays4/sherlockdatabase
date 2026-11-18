@@ -563,7 +563,7 @@ function App() {
                       style={{
                         transform: `
                           rotate(${angle}deg)
-                          translateY(-45%)
+                          translateY(-145px)
                           rotate(-${angle}deg)
                         `,
                       }}
@@ -636,8 +636,8 @@ function App() {
                       style={{
                         transform: `
                           rotate(${angle}deg)
-                          translateY(-32%)
-                          rotate(-${angle + cipherRotation}deg)
+                          translateY(-90px)
+                          rotate(-${angle}deg)
                         `,
                       }}
                     >
