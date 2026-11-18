@@ -551,13 +551,10 @@ function App() {
               {/* OUTER ALPHABET */}
 
               <div className="cipher-ring outer-ring">
-
                 {alphabet.map((letter, index) => {
-
                   const angle = index * LETTER_STEP
 
                   return (
-
                     <span
                       key={letter}
                       style={{
@@ -570,85 +567,51 @@ function App() {
                     >
                       {letter}
                     </span>
-
                   )
-
                 })}
-
               </div>
 
               {/* INNER ROTATING ALPHABET */}
 
               <div
-                className="cipher-ring inner-ring"
+              className="cipher-ring inner-ring"
+              style={{
+                transform: `rotate(${cipherRotation}deg)`,
+              }}
+              onPointerDown={startCipherDrag}
+              onPointerMove={moveCipherDrag}
+              onPointerUp={endCipherDrag}
+              onPointerCancel={endCipherDrag}
+              role="slider"
+              tabIndex={0}
+              aria-label="Cipher wheel rotation"
+              aria-valuenow={Math.round(cipherRotation)}
+              aria-valuemin={0}
+              aria-valuemax={360}
+              onKeyDown={(event) => {
+                if (event.key === 'ArrowLeft') rotateCipher(-1)
+                if (event.key === 'ArrowRight') rotateCipher(1)
+              }}
+            >
+              {alphabet.map((letter, index) => {
+                const angle = index * LETTER_STEP
 
-                style={{
-                  transform: `rotate(${cipherRotation}deg)`,
-                }}
-
-                onPointerDown={startCipherDrag}
-                onPointerMove={moveCipherDrag}
-                onPointerUp={endCipherDrag}
-                onPointerCancel={endCipherDrag}
-                onLostPointerCapture={endCipherDrag}
-
-                role="slider"
-                tabIndex={0}
-                aria-label="Cipher wheel rotation"
-                aria-valuenow={getCipherOffset()}
-                aria-valuemin={0}
-                aria-valuemax={25}
-                aria-valuetext={`Alphabet offset ${getCipherOffset()}`}
-
-                onKeyDown={(event) => {
-
-                  if (event.key === 'ArrowLeft') {
-                    event.preventDefault()
-                    rotateCipher(-1)
-                  }
-
-                  if (event.key === 'ArrowRight') {
-                    event.preventDefault()
-                    rotateCipher(1)
-                  }
-
-                  if (event.key === 'Home') {
-                    event.preventDefault()
-                    resetCipher()
-                  }
-
-                  if (event.key === 'End') {
-                    event.preventDefault()
-                    setCipherToEnd()
-                  }
-
-                }}
-              >
-
-                {alphabet.map((letter, index) => {
-
-                  const angle = index * LETTER_STEP
-
-                  return (
-
-                    <span
-                      key={letter}
-                      style={{
-                        transform: `
-                          rotate(${angle}deg)
-                          translateY(-90px)
-                          rotate(-${angle}deg)
-                        `,
-                      }}
-                    >
-                      {letter}
-                    </span>
-
-                  )
-
-                })}
-
-              </div>
+                return (
+                  <span
+                    key={letter}
+                    style={{
+                      transform: `
+                        rotate(${angle}deg)
+                        translateY(-90px)
+                        rotate(-${angle + cipherRotation}deg)
+                      `,
+                    }}
+                  >
+                    {letter}
+                  </span>
+                )
+              })}
+            </div>
 
               {/* CENTRE */}
 
